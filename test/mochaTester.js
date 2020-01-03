@@ -1,6 +1,8 @@
+require('dotenv').config();
 var expect = require('chai').expect;
 var myLambda = require('../handler');
 var retError, retValue ;
+
 
 
 describe('myLambda',function() {
