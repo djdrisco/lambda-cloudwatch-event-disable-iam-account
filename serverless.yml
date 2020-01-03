@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: lambda-cloudwatch-event-disable-iam-account
+service: lambda-event-disable-account
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -23,11 +23,34 @@ service: lambda-cloudwatch-event-disable-iam-account
 provider:
   name: aws
   runtime: nodejs12.x
+  timeout: 120
+  vpc:
+    securityGroupIds:
+      - sg-027ea152cb5837dac
+    subnetIds:
+      - subnet-07af150dc8fb08db1
+      - subnet-07d12977c50f7112e
+      - subnet-09f239310155e8656
 
 # you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  stage: dev
+  region: us-east-1
 
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "secretsmanager:GetSecretValue"
+      Resource: "arn:aws:secretsmanager:us-east-1:199630292710:secret:automation_db-RIw8F2"
+    - Effect: "Allow"
+      Action:
+        - "logs:CreateLogGroup"
+        - "logs:CreateLogStream"
+        - "logs:PutLogEvents"
+      Resource: "arn:aws:logs:us-east-1:*"
+    - Effect: "Allow"
+      Action:
+        - "iam:DeleteLoginProfile"
+      Resource: "*"
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
 #    - Effect: "Allow"
